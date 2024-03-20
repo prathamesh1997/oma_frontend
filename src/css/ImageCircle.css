@@ -1,0 +1,39 @@
+.image-circle {
+  position: relative;
+  width: 200px; 
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.image-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.update-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0; 
+  transition: opacity 0.3s ease, transform 0.3s ease; 
+}
+.image-circle:hover img {
+  filter: blur(5px); 
+}
+
+
+.image-circle:hover .update-icon {
+  opacity: 1; 
+  transform: translate(-50%, -50%) scale(1.2); 
+}
+
+.update-icon svg {
+  width: 30px; 
+  height: 30px;
+  fill: #fff; 
+  color: white;
+}
