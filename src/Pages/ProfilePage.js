@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Grid, TextField, Divider, Typography, Paper, IconButton   } from '@mui/material';
+import { Container, Grid, TextField, Divider, Typography, Paper, Button    } from '@mui/material';
 import ImageCircle from '../Module/ImageCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+
+import { DownloadProfile} from '../Module/DownloadPdf';
 
 import { styled } from '@mui/material/styles';
 
@@ -102,6 +105,10 @@ function ProfilePage({ userInfo, displaySuccess }) {
     }));
   }
 
+  const downloadProfile = () => {
+    DownloadProfile(profileData, photoUrl);
+  }
+
   if (!userInfo?.user) {
      return (
       <React.Fragment>
@@ -117,211 +124,218 @@ function ProfilePage({ userInfo, displaySuccess }) {
       <Grid container spacing={2}>
         <Grid item xs={8}>
         <form onSubmit={handleSubmit} className="profile-update-form">
-        <div>
-          {/* <label htmlFor="firstName">First Name:</label>
-          <input type="text" id="firstName" name="firstName" value={profileData.firstName} onChange={handleChange} /> */}
+          <div>
+            {/* <label htmlFor="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" value={profileData.firstName} onChange={handleChange} /> */}
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+              <TextField
+                label="First Name"
+                name='firstName'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.firstName}
+                onChange={handleChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+              <Grid item xs={6}>
+              <TextField
+                label="Last Name"
+                name='lastName'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.lastName}
+                onChange={handleChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+            </Grid>
+          </div>
+          <div>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+              <TextField
+                label="Email"
+                name='email'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.email}
+                onChange={handleChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+              <Grid item xs={6}>
+              <TextField
+                label="Mobile No"
+                name='mobileNo'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.mobileNo}
+                onChange={handleChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+            </Grid>
+          </div>
+          
+          <Typography gutterBottom variant="h6">
+            Address
+          </Typography>
+          <div>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+              <TextField
+                label="Street"
+                name='street'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.address?.street}
+                onChange={handleAddressChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+            </Grid>
+          </div>
+          <div>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-            <TextField
-              label="First Name"
-              name='firstName'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.firstName}
-              onChange={handleChange}
-              margin='normal'
-              fullWidth
-            />
+              <Grid item xs={6}>
+              <TextField
+                label="City"
+                name='city'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.address?.city}
+                onChange={handleAddressChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+              <Grid item xs={6}>
+              <TextField
+                label="State"
+                name='state'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.address?.state}
+                onChange={handleAddressChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-            <TextField
-              label="Last Name"
-              name='lastName'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.lastName}
-              onChange={handleChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
-          </Grid>
-        </div>
-        <div>
+          </div>
+          <div>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
-            <TextField
-              label="Email"
-              name='email'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.email}
-              onChange={handleChange}
-              margin='normal'
-              fullWidth
-            />
+              <Grid item xs={6}>
+              <TextField
+                label="Zip"
+                name='zip'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.address?.zip}
+                onChange={handleAddressChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
+              <Grid item xs={6}>
+              <TextField
+                label="Country"
+                name='country'
+                id="outlined-size-small"
+                size="small"
+                value={profileData?.address?.country}
+                onChange={handleAddressChange}
+                margin='normal'
+                fullWidth
+              />
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-            <TextField
-              label="Mobile No"
-              name='mobileNo'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.mobileNo}
-              onChange={handleChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
-          </Grid>
-        </div>
-        
-        <Typography gutterBottom variant="h6">
-          Address
-        </Typography>
-        <div>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-            <TextField
-              label="Street"
-              name='street'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.address?.street}
-              onChange={handleAddressChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
-          </Grid>
-        </div>
-        <div>
+          </div>
+          <div>
+          <div style={{display:"flex",alignItems:"center"}}>
+          <Typography gutterBottom variant="h6" style={{flexGrow:1}}>
+            Education Details
+          </Typography>
+          <div className='AddIcon' onClick={(e)=>handleAddEducation(e)}>
+            <AddCircleOutlineIcon fontSize="small" />
+          </div>
+          </div>
+            {profileData?.education?.map((edu, index) => (
+              <DemoPaper  key={index}  elevation={0} >
+                <div style={{display:"flex"}}>
+                <Typography style={{ flexGrow:1}}>Education {index + 1}</Typography>
+                {profileData?.education.length > 1 && <div className='deleteIcon' onClick={(e)=>RemoveEducation(e,index)}><DeleteIcon fontSize="small" /></div>}
+                </div>
+                <Grid container spacing={2}>
+                <Grid item xs={6}>
+                <TextField
+                  label={`Degree`}
+                  name={`degree${index}`}
+                  id="outlined-size-small"
+                  size="small"
+                  value={edu.degree}
+                  onChange={(e) => handleChangeEducation(e, index, 'degree')}
+                  margin='normal'
+                  fullWidth
+                />
+                </Grid>
+                <Grid item xs={6}>
+                <TextField
+                  label={`Major`}
+                  name={`major${index}`}
+                  id="outlined-size-small"
+                  size="small"
+                  value={edu.major}
+                  onChange={(e) => handleChangeEducation(e, index, 'major')}
+                  margin='normal'
+                  fullWidth
+                />
+                </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                <Grid item xs={6}>
+                <TextField
+                  label={`University`}
+                  name={`university${index}`}
+                  id="outlined-size-small"
+                  size="small"
+                  value={edu.university}
+                  onChange={(e) => handleChangeEducation(e, index, 'university')}
+                  margin='normal'
+                  fullWidth
+                />
+                </Grid>
+                <Grid item xs={6}>
+                <TextField
+                  label={`Graduation Year`}
+                  name={`graduationYear${index}`}
+                  id="outlined-size-small"
+                  size="small"
+                  value={edu.graduationYear}
+                  onChange={(e) => handleChangeEducation(e, index, 'graduationYear')}
+                  margin='normal'
+                  fullWidth
+                />
+                </Grid>
+                </Grid>
+              </DemoPaper>
+            ))}
+          </div>
         <Grid container spacing={2}>
-            <Grid item xs={6}>
-            <TextField
-              label="City"
-              name='city'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.address?.city}
-              onChange={handleAddressChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
-            <Grid item xs={6}>
-            <TextField
-              label="State"
-              name='state'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.address?.state}
-              onChange={handleAddressChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
+          <Grid item xs={6}>
+            <button  className='SaveButton' type="submit">Save Changes</button>
           </Grid>
-        </div>
-        <div>
-        <Grid container spacing={2}>
-            <Grid item xs={6}>
-            <TextField
-              label="Zip"
-              name='zip'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.address?.zip}
-              onChange={handleAddressChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
-            <Grid item xs={6}>
-            <TextField
-              label="Country"
-              name='country'
-              id="outlined-size-small"
-              size="small"
-              value={profileData?.address?.country}
-              onChange={handleAddressChange}
-              margin='normal'
-              fullWidth
-            />
-            </Grid>
+          <Grid item xs={6}>
+            <Button  variant="outlined"  onClick={downloadProfile} endIcon={<CloudDownloadIcon />} >Download Profile</Button>
           </Grid>
-        </div>
-        <div>
-         <div style={{display:"flex",alignItems:"center"}}>
-         <Typography gutterBottom variant="h6" style={{flexGrow:1}}>
-          Education Details
-        </Typography>
-        <div className='AddIcon' onClick={(e)=>handleAddEducation(e)}>
-          <AddCircleOutlineIcon fontSize="small" />
-        </div>
-         </div>
-          {profileData?.education?.map((edu, index) => (
-            <DemoPaper  key={index}  elevation={0} >
-              <div style={{display:"flex"}}>
-               <Typography style={{ flexGrow:1}}>Education {index + 1}</Typography>
-               {profileData?.education.length > 1 && <div className='deleteIcon' onClick={(e)=>RemoveEducation(e,index)}><DeleteIcon fontSize="small" /></div>}
-              </div>
-              <Grid container spacing={2}>
-              <Grid item xs={6}>
-              <TextField
-                label={`Degree`}
-                name={`degree${index}`}
-                id="outlined-size-small"
-                size="small"
-                value={edu.degree}
-                onChange={(e) => handleChangeEducation(e, index, 'degree')}
-                margin='normal'
-                fullWidth
-              />
-              </Grid>
-              <Grid item xs={6}>
-              <TextField
-                label={`Major`}
-                name={`major${index}`}
-                id="outlined-size-small"
-                size="small"
-                value={edu.major}
-                onChange={(e) => handleChangeEducation(e, index, 'major')}
-                margin='normal'
-                fullWidth
-              />
-              </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-              <Grid item xs={6}>
-              <TextField
-                label={`University`}
-                name={`university${index}`}
-                id="outlined-size-small"
-                size="small"
-                value={edu.university}
-                onChange={(e) => handleChangeEducation(e, index, 'university')}
-                margin='normal'
-                fullWidth
-              />
-              </Grid>
-              <Grid item xs={6}>
-              <TextField
-                label={`Graduation Year`}
-                name={`graduationYear${index}`}
-                id="outlined-size-small"
-                size="small"
-                value={edu.graduationYear}
-                onChange={(e) => handleChangeEducation(e, index, 'graduationYear')}
-                margin='normal'
-                fullWidth
-              />
-              </Grid>
-              </Grid>
-            </DemoPaper>
-          ))}
-        </div>
-        <button type="submit">Save Changes</button>
+        </Grid>
       </form>
         </Grid>
         <Grid item xs={4} style={{display:"flex", justifyContent:"center"}}>
